@@ -9,7 +9,7 @@ test("Deve fazer cotação SSW", async function () {
     cnpj: 33403625000153,
   };
   const transportData = {
-    zipcode: 86805300,
+    zipcode: 1153000,
     total: 1000,
     quantity: 4,
     weigth: 8,
@@ -17,10 +17,11 @@ test("Deve fazer cotação SSW", async function () {
   };
 
   const transportation = new TransportationSSW(
-    "005",
+    transportedId,
     transportAuth,
     transportData,
   );
+
   const teste = await transportation.generateQuote();
   console.log(teste);
 });

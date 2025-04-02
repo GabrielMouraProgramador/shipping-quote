@@ -50,8 +50,8 @@ export default class TransportationSSW {
       return new Quotation(
         this.transportedId,
         cotacao.cotacao,
-        cotacao.frete,
-        cotacao.prazo,
+        parseFloat(cotacao.frete.replace(",", ".")),
+        parseInt(cotacao.prazo),
         false,
       );
     } catch (error) {
