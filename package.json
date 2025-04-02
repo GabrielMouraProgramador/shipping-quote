@@ -1,0 +1,27 @@
+{
+  "name": "shipping-quote",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
+    "test": "jest --watch",
+    "dev": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielMouraProgramador/shipping-quote.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielMouraProgramador/shipping-quote/issues"
+  },
+  "homepage": "https://github.com/GabrielMouraProgramador/shipping-quote#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  }
+}
