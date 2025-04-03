@@ -5,5 +5,6 @@ export default class Quotation {
     public readonly price: number,
     public readonly term: number,
     public readonly isCubage: boolean,
+    public unservedArea: boolean = true,
   ) {}
 }
