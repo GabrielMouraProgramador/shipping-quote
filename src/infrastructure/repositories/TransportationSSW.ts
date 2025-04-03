@@ -2,8 +2,9 @@ import * as soap from "soap";
 import { parseStringPromise } from "xml2js";
 import Quotation from "../../domain/value-objects/Quotation";
 import Order from "../../domain/entities/Order";
+import { ITransportationRepository } from "../../domain/repositories/ITransportationRepository";
 
-export default class TransportationSSW {
+export default class TransportationSSW implements ITransportationRepository {
   private endPoint = "https://ssw.inf.br/ws/sswCotacaoColeta/index.php?wsdl";
   private zipcode_origin: number = 86804390;
 
