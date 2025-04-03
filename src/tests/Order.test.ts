@@ -12,11 +12,11 @@ test("Deve Calcular a Cubagem", function () {
   const product = new Product(5, 8, 50, 50, 80);
   const order = new Order(8886565, 1000);
 
-  order.addProducts([product]);
+  order.addProducts(product);
 
   expect(order.orderId).toBe(8886565);
   expect(order.total).toBe(1000);
-  expect(order.cubage).toBe(0.03);
+  expect(order.getCubage()).toBe(0.03);
 });
 test("Deve add Address ", function () {
   const address = new Address({

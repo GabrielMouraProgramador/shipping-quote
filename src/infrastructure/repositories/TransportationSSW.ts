@@ -1,6 +1,7 @@
 import * as soap from "soap";
 import { parseStringPromise } from "xml2js";
 import Quotation from "../../domain/value-objects/Quotation";
+import Order from "../../domain/entities/Order";
 
 export default class TransportationSSW {
   private endPoint = "https://ssw.inf.br/ws/sswCotacaoColeta/index.php?wsdl";
@@ -12,10 +13,9 @@ export default class TransportationSSW {
   constructor(
     readonly transportedId: string,
     readonly authTransport: SSWAUTH,
-    readonly data: SSWDATAQUOT,
   ) {}
 
-  async generateQuote() {
+  async generateQuote(data: Order) {
     try {
       // Criar o cliente SOAP de forma assíncrona
       const client = await this.createSoapClient();
@@ -27,11 +27,11 @@ export default class TransportationSSW {
         password: this.authTransport.password,
         cnpj: this.authTransport.cnpj,
         cep_origem: this.zipcode_origin,
-        cep_destino: this.data.zipcode,
-        valor: this.data.total,
-        quantidade: this.data.quantity,
-        peso: this.data.weigth,
-        cubagem: this.data.cube,
+        cep_destino: data.address?.zipCode,
+        valor: data.total,
+        quantidade: data.getQuantityTotal(),
+        peso: data.getWeightTotal(),
+        cubagem: data.getCubage(),
         codigo_mercadoria: this.codigo_mercadoria,
         tipo_frete: this.tipo_frete,
         cod_transportadora: this.authTransport.cod,
@@ -39,12 +39,22 @@ export default class TransportationSSW {
 
       const [result] = await client.cotarAsync(args);
       if (!result?.return?.$value) {
+        console.error(result);
         throw new Error("Não foi possivel acessar o SSW");
       }
       const { cotacao } = await this.XMlToJSON(result.return.$value);
 
-      if (cotacao?.erro && parseInt(cotacao.erro) !== 0) {
+      if (
+        cotacao?.erro &&
+        parseInt(cotacao.erro) !== 0 &&
+        parseInt(cotacao.erro) !== 1
+      ) {
+        console.error(cotacao);
         throw new Error("Cotação processada, porem erro registado");
+      }
+
+      if (cotacao?.erro && parseInt(cotacao.erro) === 1) {
+        return new Quotation(this.transportedId, "", 0, 0, false, false);
       }
 
       return new Quotation(
@@ -80,10 +90,10 @@ export default class TransportationSSW {
 }
 
 export interface SSWAUTH {
-  cod: string;
-  user: string;
-  password: string;
-  cnpj: number;
+  cod: string | undefined;
+  user: string | undefined;
+  password: string | undefined;
+  cnpj: string | undefined;
 }
 
 export interface SSWDATAQUOT {
