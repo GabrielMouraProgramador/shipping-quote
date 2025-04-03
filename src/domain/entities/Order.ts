@@ -2,7 +2,6 @@ import Address from "../value-objects/Address";
 import Product from "../value-objects/Product";
 
 export default class Order {
-  public cubage: number = 0;
   public totalQuantity: number = 0;
   public totalWeigth: number = 0;
   public total: number = 0;
@@ -18,16 +17,14 @@ export default class Order {
   }
   public async addProducts(products: Product | Product[]) {
     this.products = Array.isArray(products) ? products : [products];
-    await this.calculateCubage();
   }
 
   public async addAddress(address: Address) {
     this.address = address;
-    await this.calculateCubage();
   }
-  private calculateCubage() {
+  public getCubage() {
     // formula altura * largura * comprimentro / peso | calculo em Metro
-    this.cubage = this.products.reduce((totalCubage, product) => {
+    return this.products.reduce((totalCubage, product) => {
       if (product.weight <= 0) return totalCubage;
 
       let productCubage = 0;
@@ -58,5 +55,15 @@ export default class Order {
 
       return totalCubage + parseFloat(productCubage.toFixed(2));
     }, 0);
+  }
+  public getQuantityTotal(): number {
+    return this.products.reduce(
+      (total, product) => total + product.quantity,
+      0,
+    );
+  }
+
+  public getWeightTotal(): number {
+    return this.products.reduce((total, product) => total + product.weight, 0);
   }
 }
